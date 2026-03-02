@@ -58,6 +58,7 @@ main .left .review {
 main .right {
   background-color: #343434;
   padding: 1rem 2rem;
-  font-size: 1.5rem;
+  font-size: 0.95rem;
   overflow: auto;
+  line-height: 1.6;
 }
