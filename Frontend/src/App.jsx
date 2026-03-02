@@ -15,14 +15,23 @@ function App() {
 }`)
 
   const [ review, setReview ] = useState(``)
+  const [ loading, setLoading ] = useState(false)
 
   useEffect(() => {
     prism.highlightAll()
   }, [])
 
   async function reviewCode() {
-    const response = await axios.post(`${import.meta.env.VITE_API_URL}/ai/get-review`, { code })
-    setReview(response.data)
+    setLoading(true)
+    setReview('')
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/ai/get-review`, { code })
+      setReview(response.data)
+    } catch (error) {
+      setReview('Error: Unable to get review. Please try again.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -50,11 +59,11 @@ function App() {
             className="review">Review</div>
         </div>
         <div className="right">
-          <Markdown
-
-            rehypePlugins={[ rehypeHighlight ]}
-
-          >{review}</Markdown>
+          {loading ? (
+            <div style={{ color: '#fff', fontSize: '1rem' }}>Working...</div>
+          ) : (
+            <Markdown rehypePlugins={[ rehypeHighlight ]}>{review}</Markdown>
+          )}
         </div>
       </main>
     </>
